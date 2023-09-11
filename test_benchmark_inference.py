@@ -55,7 +55,7 @@ def timer(name, func):
     t = time.time()
     ret = func()
     t = time.time() - t
-    print(f" ** Time, {name}: {t:.2f} seconds")
+    print(f" ** Time, {name}: {t:.3f} seconds")
     return ret
 
 
@@ -171,18 +171,20 @@ if args.perf:
 
     begin()
 
+    print(" -- Inference, first pass.")
     t = time.time()
 
-    print(" -- Inference, first pass.")
+    #print(" -- Inference, first pass.")
     logits = timer("Inference", lambda: next_logits(ids, lora))
 
     t = time.time() - t
     print(f" ** Speed: {ids.shape[-1] / t:.2f} tokens/second")
 
     for j in range(2):
-
-        t = time.time()
+        
         print(f" -- Generating {gen_tokens} tokens, {ids.shape[-1]} token prompt...")
+        t = time.time()
+        #print(f" -- Generating {gen_tokens} tokens, {ids.shape[-1]} token prompt...")
         for i in range(gen_tokens):
 
             logits = logits[0, -1, :]
@@ -191,7 +193,7 @@ if args.perf:
             logits = next_logits(next_id, lora)
 
         t = time.time() - t
-        print(f" ** Speed: {gen_tokens / t:.2f} tokens/second")
+        print(f" ** Speed: {gen_tokens / t:.2f} tokens/second, {t:.3f} sec")
 
         ids = ids[:, :4]
         cache.current_seq_len = 4
