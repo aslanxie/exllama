@@ -152,7 +152,7 @@ if args.lora:
 
 # Test sequence
 
-gen_tokens = 128
+gen_tokens = 32
 max_seq_len = args.length
 ids = torch.randint(0, 31999, (1, max_seq_len - gen_tokens)).cuda()
 
@@ -177,8 +177,8 @@ if args.perf:
     #print(" -- Inference, first pass.")
     logits = timer("Inference", lambda: next_logits(ids, lora))
 
-    t = time.time() - t
-    print(f" ** Speed: {ids.shape[-1] / t:.2f} tokens/second")
+    t1 = time.time() - t
+    print(f" ** Speed: {ids.shape[-1] / t1:.3f} tokens/second")
 
     for j in range(2):
         
@@ -192,8 +192,9 @@ if args.perf:
             next_id = token.unsqueeze(0).unsqueeze(0)
             logits = next_logits(next_id, lora)
 
-        t = time.time() - t
-        print(f" ** Speed: {gen_tokens / t:.2f} tokens/second, {t:.3f} sec")
+        t2 = time.time() - t
+        print(f" ** Speed: {gen_tokens / t2:.3f} tokens/second, {t2:.3f} sec")
+        print(f"**Total time: {(t1 + t2):.3f}, tokens/seconds {gen_tokens / (t1+t2):.3f} **")
 
         ids = ids[:, :4]
         cache.current_seq_len = 4
