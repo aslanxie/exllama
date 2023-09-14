@@ -195,12 +195,12 @@ if args.perf:
         t = time.time()
         text,ids = generator.generate_simple(prompts, max_new_tokens = gen_tokens)
         t = time.time() - t
-        print(f"latency {t}, total tokens: {ids.size()[0]}")
+        print(f"latency {t:.3f}, total tokens: {ids.size()[0]}")
         real_gen_tokens = ids.size()[0] - input_ids.size()[1]
         print(f"real generate tokens {real_gen_tokens}")
         #print(f" ** Generation: {repr(text)}")
         #print(ids)
-        print(f" ** Speed: {real_gen_tokens / t:.2f} tokens/second")
+        print(f" ** Speed: {real_gen_tokens / t:.3f} tokens/second")
 
 
 
